@@ -393,8 +393,24 @@ namespace JoinRpg.Web.Controllers
         {
             try
             {
-                await _plotService.PublishElementVersion(model.ProjectId, model.PlotFolderId,
-                    model.PlotElementId, model.Version);
+                await _plotService.PublishElementVersion(model);
+                return ReturnToPlot(model.ProjectId, model.PlotFolderId);
+            }
+            catch (Exception)
+            {
+                return await Edit(model.ProjectId, model.PlotFolderId);
+            }
+        }
+
+        [HttpPost]
+        [MasterAuthorize(Permission.CanManagePlots)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UnPublishElement(PublishPlotElementViewModel model)
+        {
+            try
+            {
+                model.Version = null;
+                await _plotService.PublishElementVersion(model);
                 return ReturnToPlot(model.ProjectId, model.PlotFolderId);
             }
             catch (Exception)
@@ -416,18 +432,5 @@ namespace JoinRpg.Web.Controllers
           UriService, version));
     }
 
-    [HttpPost, MasterAuthorize(Permission.CanManagePlots), ValidateAntiForgeryToken]
-    public async Task<ActionResult> UnPublishElement(int plotelementid, int plotFolderId, int projectId)
-    {
-      try
-      {
-        await _plotService.PublishElementVersion(projectId, plotFolderId, plotelementid, null);
-        return ReturnToPlot(projectId, plotFolderId);
-      }
-      catch (Exception)
-      {
-        return await Edit(projectId, plotFolderId);
-      }
-    }
   }
 }
