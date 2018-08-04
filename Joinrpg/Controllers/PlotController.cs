@@ -116,7 +116,7 @@ namespace JoinRpg.Web.Controllers
       return View(new AddPlotFolderViewModel
       {
         ProjectId = project1.ProjectId,
-        ProjectName = project1.ProjectName
+        ProjectName = project1.ProjectName,
       });
     }
 
@@ -415,7 +415,8 @@ namespace JoinRpg.Web.Controllers
             }
             catch (Exception)
             {
-                return await Edit(model.ProjectId, model.PlotFolderId);
+                throw;
+                //return await Edit(model.ProjectId, model.PlotFolderId);
             }
         }
 
